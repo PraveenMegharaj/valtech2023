@@ -1,4 +1,4 @@
-package com.valtech.training.first_maven_project;
+package com.valtech.training.mobile_rating_app;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -31,11 +31,6 @@ public class AppTest
     /**
      * Rigourous Test :-)
      */
-    
-    public void testSayhello() {
-    	App app = new App();
-    	assertEquals("Hello World", app.sayHello());
-    }
     public void testApp()
     {
         assertTrue( true );
