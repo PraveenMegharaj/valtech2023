@@ -1,6 +1,6 @@
 package com.valtech.training.hibernate.client;
 
-import java.text.DateFormat;
+import java.text.DateFormat; 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -19,8 +19,13 @@ import com.valtech.training.hibernate.Account;
 import com.valtech.training.hibernate.Address;
 import com.valtech.training.hibernate.AtmTx;
 import com.valtech.training.hibernate.ChequeTx;
+import com.valtech.training.hibernate.Company;
 import com.valtech.training.hibernate.Customer;
 import com.valtech.training.hibernate.Employee;
+import com.valtech.training.hibernate.OrderItems;
+import com.valtech.training.hibernate.Product;
+import com.valtech.training.hibernate.ProductCustomer;
+import com.valtech.training.hibernate.ProductOrder;
 import com.valtech.training.hibernate.Registration;
 import com.valtech.training.hibernate.TellerTx;
 import com.valtech.training.hibernate.Tx;
@@ -30,10 +35,11 @@ public class HibernateClient {
 	public static void main(String[] args) throws HibernateException, ParseException {
 		DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 		AnnotationConfiguration cfg = new AnnotationConfiguration();
-		cfg.addAnnotatedClass(Employee.class);
-		cfg.addAnnotatedClass(Tx.class).addAnnotatedClass(ChequeTx.class).addAnnotatedClass(TellerTx.class).addAnnotatedClass(AtmTx.class);
-		cfg.addAnnotatedClass(Customer.class).addAnnotatedClass(Address.class).addAnnotatedClass(Account.class);
-		cfg.addAnnotatedClass(Registration.class);
+//		cfg.addAnnotatedClass(Employee.class);
+//		cfg.addAnnotatedClass(Tx.class).addAnnotatedClass(ChequeTx.class).addAnnotatedClass(TellerTx.class).addAnnotatedClass(AtmTx.class);
+//		cfg.addAnnotatedClass(Customer.class).addAnnotatedClass(Address.class).addAnnotatedClass(Account.class);
+//		cfg.addAnnotatedClass(Registration.class);
+		cfg.addAnnotatedClass(Company.class).addAnnotatedClass(ProductCustomer.class).addAnnotatedClass(ProductOrder.class);
 		
 		org.hibernate.SessionFactory sesFac = cfg.buildSessionFactory();
 		org.hibernate.Session ses = sesFac.openSession();
@@ -94,14 +100,32 @@ public class HibernateClient {
 //		query.setFloat(0, 3000);
 //		query.list().forEach(t-> System.out.println(t));
 		
-		org.hibernate.Query query = ses.getNamedQuery("Tx.findAllByCityAndAmountGreaterThan");
-//		org.hibernate.Query query = ses.createQuery("SELECT tx from Tx tx JOIN tx.account.customers c WHERE c.address.city = ? AND tx.amount > ?");
-		((org.hibernate.Query) query).setString(0,"Blr");
-		((org.hibernate.Query) query).setFloat(1,3000);
-		((org.hibernate.Query) query).list().forEach(t->System.out.println(t));
+//		org.hibernate.Query query = ses.getNamedQuery("Tx.findAllByCityAndAmountGreaterThan");
+////		org.hibernate.Query query = ses.createQuery("SELECT tx from Tx tx JOIN tx.account.customers c WHERE c.address.city = ? AND tx.amount > ?");
+//		((org.hibernate.Query) query).setString(0,"Blr");
+//		((org.hibernate.Query) query).setFloat(1,3000);
+//		((org.hibernate.Query) query).list().forEach(t->System.out.println(t));
 		
 		
 //		ses.persist(new Employee("Abc",df.parse("15-09-1947"),20000,'M',false));
+		
+		Company c = new Company("Google","bangalore");
+		Product p1 = new Product("Photos",10000);
+		Product p2 = new Product("Maps",90000);
+		ses.save(c);
+		ses.save(p1);
+		ses.save(p2);
+		c.addProduct(p1);
+		c.addProduct(p2);
+		
+		ProductCustomer pc =new ProductCustomer("Praveen",136176,"bangalore");
+		ses.save(pc);
+		ProductOrder po1 = new ProductOrder(df.parse("11-11-2023"));
+		ProductOrder po2 = new ProductOrder(df.parse("12-11-2023"));
+		ses.save(po1);
+		ses.save(po2);
+		pc.addProductOrder(po1);
+		pc.addProductOrder(po2);
 		
 		tx.commit();
 		ses.close();

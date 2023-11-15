@@ -99,4 +99,11 @@ public class Employee {
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", name=" + name + ", dob=" + dob + ", salary=" + salary + ", gender=" + gender
+				+ ", active=" + active + ", version=" + version + "]";
+	}
 }
